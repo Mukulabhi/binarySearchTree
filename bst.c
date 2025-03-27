@@ -157,6 +157,50 @@ int search(tree* root,int searchVal){
     return -1;
 }
 
+tree* del(tree* root,int num){
+    tree *p,*t,*cur,*suc;
+    if(root==NULL){
+        printf("\n Tree is empty");
+        return root;
+    }
+        p=NULL;
+        cur=root;
+        while(cur!=NULL && num!=cur->data){
+         p=cur;
+         if(num<cur->data){
+            cur = cur->left;
+         }else{
+            cur = cur->right;
+          }
+        }
+        if(cur == NULL){
+            printf("\nValue not found");
+        }else if(cur->left==NULL){
+            t = cur->right;
+        }else if(cur->right == NULL){
+            t = cur->left;
+        }else{
+            suc = cur->right;
+            while(suc->left!=NULL){
+                suc = suc->left;
+            }
+            suc->left = cur->left;
+            t =cur->right;
+        }
+
+        if(p==NULL){
+            free(cur);
+            root = t;
+            return root;
+        }else if(p->left == cur){
+            p->left = t;
+        }else{
+            p->right=t;
+        }
+        free(cur);
+        return root;
+}
+
 void main(){
     int n,num,ctr=0,searchVal;
     tree* root=NULL;
@@ -172,7 +216,8 @@ void main(){
         printf("\n 9. min value");
         printf("\n 10. height of the tree");
         printf("\n 11. search");
-        printf("\n 12. exit");
+        printf("\n 12. Delete");
+        printf("\n 13. exit");
         printf("\n Enter choice number = ");
         scanf("%d",&n);
         switch(n){
@@ -231,6 +276,11 @@ void main(){
              if(num!=-1){
               printf("\n Search value found");
              }
+             break;
+             case 12 :
+             printf("\n Enter the value to delete = ");
+             scanf("%d",&n);
+             root = del(root,n);
              break;
             default :
             printf("\n Invalid choice number");
